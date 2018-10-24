@@ -88,13 +88,13 @@ int main() {
 			while (!line.empty())
 			{
 				
-				if (line.size() == 1)//¬O§_¥½ºİ
+				if (line.size() == 1)//æ˜¯å¦æœ«ç«¯
 				{
-					if (insertline.empty())//¬O§_ªÅªº
+					if (insertline.empty())//æ˜¯å¦ç©ºçš„
 					{
 						tem = line.front();
 						line.pop();
-						if (tem.AT + tem.AWT > time)//²Ä¤@­Ó¤H¥i¥H°µ
+						if (tem.AT + tem.AWT > time)//ç¬¬ä¸€å€‹äººå¯ä»¥åš
 						{
 							costumer[tem.name].can = true;
 							if(time<tem.AT) time = tem.ST+tem.AT;
@@ -107,20 +107,20 @@ int main() {
 					{
 						tem = line.front();
 						line.pop();
-						if (tem.AT < time){
+						if (tem.AT < time){//æ™‚é–“æ˜¯å¦å·²ç¶“è¶…é
 							while (!insertline.empty())
 							{
 								Client intem = insertline.front();
 								insertline.pop();
-								if (tem.AT + tem.AWT > time)//¥LÁÙ¦³®É¶¡°µ
+								if (tem.AT + tem.AWT > time)//ä»–é‚„æœ‰æ™‚é–“åš
 								{
-									if (intem.ST + time < tem.AWT + tem.AT)//¥i¥H°µ
+									if (intem.ST + time < tem.AWT + tem.AT)//å¯ä»¥åš
 									{
 										costumer[intem.name].can = true;
 										time += intem.ST;
 										costumer[intem.name].detime = time;
 									}
-									else {//¤w¸g¤£¯à¦A´¡¤J°µ­n¤£§A¦Û¤v¨S±o°µ¤F
+									else {//å·²ç¶“ä¸èƒ½å†æ’å…¥åšè¦ä¸ä½ è‡ªå·±æ²’å¾—åšäº†
 										costumer[tem.name].can = true;
 										if (time < tem.AT) time = tem.ST + tem.AT;
 										else time += tem.ST;
@@ -131,6 +131,15 @@ int main() {
 								}
 							}
 						}
+						else {
+							if (tem.AT + tem.AWT > time)//ç¬¬ä¸€å€‹äººå¯ä»¥åš
+							{
+								costumer[tem.name].can = true;
+								if (time < tem.AT) time = tem.ST + tem.AT;
+								else time += tem.ST;
+								costumer[tem.name].detime = time;
+							}
+						}
 					
 					}
 				}
@@ -139,11 +148,11 @@ int main() {
 					tem = line.front();
 					line.pop();
 					Client tem2 = line.front();
-						if (tem.AT < time&&tem2.AT < time)//«á¨â¦ì³£¨ì¤F
+						if (tem.AT < time&&tem2.AT < time)//å¾Œå…©ä½éƒ½åˆ°äº†
 						{
 							if ((time < tem.AWT + tem.AT))
 							{
-								if ((tem2.ST < tem.ST) && ((time + tem2.ST) < tem.AWT + time))//²Ä¤G¦ì§AªA°È®É¶¡¤p©ó²Ä¤@¦ì
+								if ((tem2.ST < tem.ST) && ((time + tem2.ST) < tem.AWT + time))//ç¬¬äºŒä½ä½ æœå‹™æ™‚é–“å°æ–¼ç¬¬ä¸€ä½
 								{
 									costumer[tem2.name].can = true;
 									time += tem2.ST;
@@ -155,20 +164,20 @@ int main() {
 								}
 								else
 								{
-									if (tem.AT + tem.AWT > time)//²Ä¤@­Ó¤H¥i¥H°µ
+									if (tem.AT + tem.AWT > time)//ç¬¬ä¸€å€‹äººå¯ä»¥åš
 									{
 										costumer[tem.name].can = true;
 										if (time < tem.AT) time = tem.ST + tem.AT;
 										else time += tem.ST;
 										costumer[tem.name].detime = time;
 									}
-									else //Åı¥L¨ì³Ì«á¤@­Ó¤H«e­±
+									else //è®“ä»–åˆ°æœ€å¾Œä¸€å€‹äººå‰é¢
 									{
 										insertline.push(tem);
 									}
 								}
 							}
-							else //Åı¥L¨ì³Ì«á¤@­Ó¤H«e­±
+							else //è®“ä»–åˆ°æœ€å¾Œä¸€å€‹äººå‰é¢
 							{
 								insertline.push(tem);
 							}
@@ -176,14 +185,14 @@ int main() {
 						}
 						else
 						{
-							if (tem.AT + tem.AWT > time)//²Ä¤@­Ó¤H¥i¥H°µ
+							if (tem.AT + tem.AWT > time)//ç¬¬ä¸€å€‹äººå¯ä»¥åš
 							{
 								costumer[tem.name].can = true;
 								if (time < tem.AT) time = tem.ST + tem.AT;
 								else time += tem.ST;
 								costumer[tem.name].detime = time;
 							}
-							else //Åı¥L¨ì³Ì«á¤@­Ó¤H«e­±
+							else //è®“ä»–åˆ°æœ€å¾Œä¸€å€‹äººå‰é¢
 							{
 								insertline.push(tem);
 							}
