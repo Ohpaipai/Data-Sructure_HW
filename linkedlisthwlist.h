@@ -16,8 +16,8 @@ template <typename A>
 template <class T>
 struct GenListNode              
 {
-	int utype=0;               //  1¬°©¹¦P¤@¼hªºlist   
-	GenListNode<T> *tlink=NULL;   //utype 0¬O§ÚªºÀY ¥Ã»·«ü¦V²Ä¤@­Ó¦a¤è 1 ®É¬°¦P¤@¼h 2®É ¬°¤U¤@¼h
+	int utype=0;               //  1ç‚ºå¾€åŒä¸€å±¤çš„list   
+	GenListNode<T> *tlink=NULL;   //utype 0æ˜¯æˆ‘çš„é ­ æ°¸é æŒ‡å‘ç¬¬ä¸€å€‹åœ°æ–¹ 1 æ™‚ç‚ºåŒä¸€å±¤ 2æ™‚ ç‚ºä¸‹ä¸€å±¤
 	 struct MyStruct
 	{
 		Node<T> data;
@@ -38,14 +38,14 @@ void Mulf( int _ex, int _ey, int _ez) {
 	while (usethis->tlink != NULL)
 	{
 		//cout<<usethis->tlink->info.data.coef<<endl;
-		if (usethis->utype == 1) { //¦P¤@¼h
+		if (usethis->utype == 1) { //åŒä¸€å±¤
 			usethis->tlink->info.data.ex += _ex;
 			usethis->tlink->info.data.ey += _ey;
 			usethis->tlink->info.data.ez += _ez;
 			usethis->tlink = usethis->tlink->tlink;
 		}
 		else if(usethis->utype==2){
-			usethis->tlink = usethis->info.hlink;//Åı§Ú«ü¼Ğ©¹¤U¼h²¾°Ê
+			usethis->tlink = usethis->info.hlink;//è®“æˆ‘æŒ‡æ¨™å¾€ä¸‹å±¤ç§»å‹•
 		}
 		else {
 			break;
@@ -62,7 +62,7 @@ int refCoeff(int _ex, int _ey, int _ez)
 	while (usethis->tlink != NULL)
 	{
 		//cout << usethis->tlink->info.data.coef << endl;
-		if (usethis->utype == 1) { //¦P¤@¼h
+		if (usethis->utype == 1) { //åŒä¸€å±¤
 			if (usethis->tlink->info.data.ex == _ex &&
 				usethis->tlink->info.data.ey == _ey &&
 				usethis->tlink->info.data.ez == _ez)
@@ -75,7 +75,7 @@ int refCoeff(int _ex, int _ey, int _ez)
 			}
 		}
 		else if (usethis->utype == 2) {
-			usethis->tlink = usethis->info.hlink;//Åı§Ú«ü¼Ğ©¹¤U¼h²¾°Ê
+			usethis->tlink = usethis->info.hlink;//è®“æˆ‘æŒ‡æ¨™å¾€ä¸‹å±¤ç§»å‹•
 		}
 		else {
 			break;
