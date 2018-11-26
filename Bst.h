@@ -23,6 +23,9 @@ public:
 
 class Bst {
 private:
+	int ans = 0;
+	int sum = 0;
+	bool find = false;
 	TreeNode* root;
 	TreeNode* FindRightsubtreesmallest(TreeNode *current) {
 		TreeNode *findnode = new TreeNode;
@@ -34,6 +37,39 @@ private:
 			
 		}
 		return findnode;
+	}
+	TreeNode *GetTheLeftNode() {
+		TreeNode *returnNode = new TreeNode;
+		returnNode = root;
+		while (returnNode->leftchild!=NULL)
+		{
+			returnNode = returnNode->leftchild;
+		}
+		return returnNode;
+	}
+	TreeNode *GetTheRightNode() {
+		TreeNode *returnNode = new TreeNode;
+		returnNode = root;
+		while (returnNode->rightchild != NULL)
+		{
+			returnNode = returnNode->rightchild;
+		}
+		return returnNode;
+	}
+	void traverslal(TreeNode *current,const int num) {
+		if (find) return;
+		if (!current) return;
+		traverslal(current->leftchild,num);
+		cout << current->key << endl;
+		sum += current->key;
+		if (sum >= num&&!find) {
+			ans = current->key;
+			find = true;
+			return;
+		}
+		traverslal(current->rightchild,num);
+
+		
 	}
 public:
 	Bst() :root(0) {};
@@ -127,5 +163,18 @@ public:
 		}
 		
 	}
+
+	int Minmap(int num) {
+		int PlusAll = 0;
+		TreeNode* mynode = new TreeNode;
+		mynode = root;
+		bool find = false;
+	    sum = 0;
+		ans = 0;
+		find = false;
+		traverslal(mynode, num);
+		return ans;
+	}
+
 
 };
