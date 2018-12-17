@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 
@@ -11,37 +12,41 @@ private:
 	TreeNode *rightchild;
 	TreeNode *parent;
 	int key;
+	int leftSide;
 	friend class Bst;
 public:
-	TreeNode() :leftchild(0), rightchild(0), parent(0), key(0) {};
-	TreeNode(int a) :leftchild(0), rightchild(0), parent(0), key(a) {};
+	TreeNode() :leftchild(0), rightchild(0), parent(0), key(0),leftSide(0) {};
+	TreeNode(int a,int b):leftchild(0), rightchild(0), parent(0), key(a),leftSide(b) {};
+	TreeNode(int a) :leftchild(0), rightchild(0), parent(0), key(a), leftSide(0) {};
 
 	int GetKey() { return key; }
 	void setkey(int a) { key = a; }
+	int Getleftside() { return leftSide; }
+	void setLeftside(int a) { leftSide = a; }
 
 };
 
 class Bst {
+public: TreeNode* root;
 private:
+	
 	int ans = 0;
-	int sum = 0;
-	bool find = false;
-	TreeNode* root;
+	int now = 0;
 	TreeNode* FindRightsubtreesmallest(TreeNode *current) {
 		TreeNode *findnode = new TreeNode;
 		if (current->rightchild == NULL) return current;
 		else findnode = current->rightchild;
-		while (findnode->leftchild!=NULL)
+		while (findnode->leftchild != NULL)
 		{
 			findnode = findnode->leftchild;
-			
+
 		}
 		return findnode;
 	}
 	TreeNode *GetTheLeftNode() {
 		TreeNode *returnNode = new TreeNode;
 		returnNode = root;
-		while (returnNode->leftchild!=NULL)
+		while (returnNode->leftchild != NULL)
 		{
 			returnNode = returnNode->leftchild;
 		}
@@ -56,24 +61,23 @@ private:
 		}
 		return returnNode;
 	}
-	void traverslal(TreeNode *current,const int num) {
-		if (find) return;
-		if (!current) return;
-		traverslal(current->leftchild,num);
-		cout << current->key << endl;
-		sum += current->key;
-		if (sum >= num&&!find) {
-			ans = current->key;
-			find = true;
-			return;
-		}
-		traverslal(current->rightchild,num);
-
+	void traverslalforavg(TreeNode *current,const int start,const int end) {
 		
+		if (!current || current == NULL) return;
+		traverslalforavg(current->leftchild, start,end);
+		if (now >= start && now <= end) {
+			ans += current->key;
+		}
+		now++;
+		//cout << current->key << "   " << current->leftSide << endl;
+		traverslalforavg(current->rightchild, start, end);
+		
+
+
 	}
 public:
 	Bst() :root(0) {};
-
+	
 	TreeNode* Search(int key) {
 		TreeNode *current = root;//先到我的開頭
 		while (current != NULL && key != current->key) {
@@ -90,15 +94,19 @@ public:
 	void  Insert(int key) {
 		TreeNode *findnode = 0;
 		TreeNode *tem = 0;
-		TreeNode *mynode=new TreeNode(key);
+		TreeNode *mynode = new TreeNode(key);
 
 		tem = root;
+		int countleftside = 0;
 		while (tem != NULL) {
-			findnode =tem;
+			findnode = tem;
 			if (mynode->key < tem->key) {
+				//新增
+				tem->leftSide++;
 				tem = tem->leftchild;//小的往左邊走
+
 			}
-			else 
+			else
 			{
 				tem = tem->rightchild;//大於往右邊
 			}
@@ -109,11 +117,19 @@ public:
 		if (findnode == NULL) {
 			this->root = mynode;
 		}
-		else if(mynode->key<findnode->key)
+		else if (mynode->key<findnode->key)
 		{
+
+			
 			findnode->leftchild = mynode;
+			
 		}
-		else findnode->rightchild = mynode;
+		else {
+			
+			findnode->rightchild = mynode;
+			
+		}
+
 	}
 
 
@@ -123,58 +139,111 @@ public:
 			cout << "Not find this node" << endl;
 		}
 		else {
-			TreeNode *reallydelete = 0;
-			TreeNode *deletechild = 0;
-			if (deletenode->leftchild == NULL&&deletenode->rightchild == NULL){//分case
-				reallydelete = deletenode;
+
+			if (deletenode->leftchild == NULL&&deletenode->rightchild == NULL) {//都沒有孩子
+				TreeNode *tem = deletenode;
+				while (1)
+				{
+					if (tem== root) break;
+					if (tem->parent->leftchild == tem) tem->parent->leftSide -= 1;
+
+					tem = tem->parent;
+
+				}
+				if (deletenode->parent->leftchild == deletenode) deletenode->parent->leftchild = NULL;
+				else deletenode->parent->rightchild = NULL;
+				delete deletenode;
+				deletenode = 0;
+				
 			}
-			else {
-				reallydelete = FindRightsubtreesmallest(deletenode);
-			}
+			else if (deletenode->leftchild == NULL&&deletenode->rightchild != NULL) { //右邊有
+				TreeNode *tem = deletenode;
+				while (1)
+				{
+					if (tem == root) break;
+					if (tem->parent->leftchild == tem) tem->parent->leftSide -= 1;
+
+					tem = tem->parent;
+				}
+				if (deletenode->parent->leftchild == deletenode) deletenode->parent->leftchild = deletenode->rightchild;
+				else deletenode->parent->rightchild = deletenode->rightchild;
 
 
-			if (reallydelete->leftchild != NULL) { //抓出兒子
-				deletechild = reallydelete->leftchild;
-			}
-			else deletechild = reallydelete->rightchild;
+				delete deletenode;
+				deletenode = NULL;
 
-			if (deletechild != NULL) //把孩子接回去
-			{
-				deletechild->parent = reallydelete->parent;
-			}
 
-			if (reallydelete->parent == NULL) { //假如刪除為root 把它當作root
-				this->root = deletechild;
-			}
-			else if (reallydelete == reallydelete->parent->leftchild) { //假設為原本的左邊孩子 把deletechild接上刪掉的取代
-				reallydelete->parent->leftchild = deletechild;
-			}
-			else {
-				reallydelete->parent->rightchild = deletechild;
-			}
 
-			if (reallydelete != deletenode) {// 把key給他
-				deletenode->key = reallydelete->key;
 			}
+			else if(deletenode->leftchild!=NULL&&deletenode->rightchild==NULL){ //左邊有
+				TreeNode *tem = deletenode;
+				while (1)
+				{
+					if (tem == root) break;
+					if (tem->parent->leftchild == tem) {
+						tem->parent->leftSide -= 1;
+					}
 
-			delete reallydelete;
-			reallydelete = 0;
+					tem = tem->parent;
+				}
+				if (deletenode->parent->leftchild == deletenode) deletenode->parent->leftchild =deletenode->leftchild;
+				else deletenode->parent->rightchild = deletenode->leftchild;
+				
+				
+				delete deletenode;
+				deletenode=NULL;
 
+			
+
+
+
+			}
+			else if (deletenode->leftchild != NULL&&deletenode->rightchild != NULL) { //兩邊都有	
+				
+				TreeNode *replace = FindRightsubtreesmallest(deletenode);
+				TreeNode *tem = replace;
+				while (1)
+				{
+					if (tem == root) break;
+					if (tem->parent->leftchild == tem) {
+						tem->parent->leftSide -= 1;
+					}
+
+					tem = tem->parent;
+				}
+				deletenode->key = replace->key;
+				if (replace->parent->leftchild == replace) replace->parent->leftchild = NULL;
+				else replace->parent->rightchild = NULL;
+				delete replace;
+				replace = NULL;
+
+			}
 		}
-		
+
 	}
 
-	int Minmap(int num) {
-		int PlusAll = 0;
-		TreeNode* mynode = new TreeNode;
-		mynode = root;
-		bool find = false;
-	    sum = 0;
-		ans = 0;
-		find = false;
-		traverslal(mynode, num);
-		return ans;
+	void traverslal(TreeNode *current) {
+		
+		if (!current||current==NULL) return;
+		traverslal(current->leftchild);
+		cout << current->key <<"   "<<current->leftSide<< endl;
+		traverslal(current->rightchild);
+
+
 	}
+
+	
+
+	double avg(int l, int u) {
+		ans = 0;
+		now=0;
+		traverslalforavg(root, l, u);
+		cout << ans << endl;
+		int div = (u - l + 1);
+		double	returnans = (double(ans) / double(div));
+	return	returnans;
+	}
+	
 
 
 };
